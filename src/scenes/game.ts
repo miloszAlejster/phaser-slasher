@@ -2,22 +2,6 @@ import Phaser from "phaser";
 import Player from "../sprites/player"
 import Slash from "../sprites/slash"
 
-// TODO: put this in different folder
-interface keysTypes{
-    slash: Phaser.Input.Keyboard.Key
-    left: Phaser.Input.Keyboard.Key
-    right:Phaser.Input.Keyboard.Key
-    up: Phaser.Input.Keyboard.Key
-    down: Phaser.Input.Keyboard.Key
-}
-interface keyBool{
-    slash: boolean
-    left: boolean
-    right: boolean
-    up: boolean
-    down: boolean
-}
-
 export default class Game extends Phaser.Scene{
     player: Phaser.GameObjects.Sprite
     slash: Phaser.GameObjects.Sprite
