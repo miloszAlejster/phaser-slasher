@@ -8,6 +8,11 @@ declare global {
     up: Phaser.Input.Keyboard.Key
     down: Phaser.Input.Keyboard.Key
   }
+
+  interface updateSlash {
+    lastTimeSlash: number
+    isDoneSlash: boolean | undefined
+  }
   interface keyBool{
     slash: boolean
     left: boolean

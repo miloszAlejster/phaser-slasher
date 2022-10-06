@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Slash from "./slash";
 
 export default class Player extends Phaser.GameObjects.Sprite{
     constructor(config){
@@ -6,11 +7,44 @@ export default class Player extends Phaser.GameObjects.Sprite{
         this.scene.physics.world.enable(this)
         this.scene.add.existing(this)
     }
-    create(){
-
-    }
+    // var-attacks
+    damage: number = 10
+    slash: Slash
+    lastTimeSlash: number = 0
+    slashCooldown: number = 500// ms
+    isDoneSlash: boolean | undefined = undefined
     update(time: number, delta: number): void {
         this.handlePlayerMovement()
+        this.handleSlashAttack(time, delta)
+    }
+    handleSlashAttack(time: number, delta: number){
+        const damage = this.damage
+        const cooldown = time - this.lastTimeSlash < this.slashCooldown
+        //init slash attack
+        if((!this.slash || !this.slash.scene) && window.recording.keys.slash && !cooldown){
+            this.createSlash()
+            this.isDoneSlash = false
+            this.lastTimeSlash = time
+        }
+        // update slash attack
+        if(this.isDoneSlash === false){
+            this.isDoneSlash = this.slash.update(time, delta, damage);
+        } 
+        // destroy slash attack
+        if(this.isDoneSlash === true){
+            this.slash.destroy()
+            this.isDoneSlash = undefined
+        }
+    }
+    // create slash attack
+    createSlash(){
+        // TODO: change x and y bug
+        this.slash = new Slash({
+            scene: this.scene, 
+            x: -1000,
+            y: -1000, 
+            key: 'slash'
+        }).setScale(0.16).setDepth(1)
     }
     // player movement
     handlePlayerMovement(){

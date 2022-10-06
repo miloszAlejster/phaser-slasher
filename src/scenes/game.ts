@@ -1,26 +1,17 @@
 import Phaser from "phaser";
 import Player from "../sprites/player"
-import Slash from "../sprites/slash"
+// import Slash from "../sprites/slash"
 
 export default class Game extends Phaser.Scene{
     player: Phaser.GameObjects.Sprite
-    slash: Phaser.GameObjects.Sprite
     dummy: Phaser.GameObjects.Rectangle
     dummy2: Phaser.GameObjects.Rectangle
-    damage: number = 10
-    damageText: Phaser.GameObjects.Text
     keys: keysTypes
     recordedKeys: keyBool
     constructor(){
         super('game')
     }
     create(){
-        this.slash = new Slash(
-            this, 
-            this.game.scale.width/2, 
-            this.game.scale.height/2, 
-            'slash'
-        ).setVisible(false).setScale(0.2).setDepth(1)
         this.player = new Player({
             scene: this,
             x: this.game.scale.width/2, 
@@ -41,7 +32,6 @@ export default class Game extends Phaser.Scene{
             30, 30, 
             0xfff000, 1
         )
-        this.damageText = this.add.text(0, 0, ' ', {fontSize: '10px'}).setVisible(false)
         this.physics.add.existing(this.player)
         this.physics.add.existing(this.dummy)
         this.physics.add.existing(this.dummy2)
@@ -62,8 +52,6 @@ export default class Game extends Phaser.Scene{
         this.record(delta)
         // player loop
         this.player.update(time, delta)
-        // slash loop
-        this.slash.update(time, delta)
     }
     // record input
     record(delta: number){
