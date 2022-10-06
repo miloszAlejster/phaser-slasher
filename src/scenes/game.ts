@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import Player from "../sprites/player"
-// import Slash from "../sprites/slash"
 
 export default class Game extends Phaser.Scene{
     player: Phaser.GameObjects.Sprite
@@ -63,7 +62,7 @@ export default class Game extends Phaser.Scene{
             up: this.keys.up.isDown,
             down: this.keys.down.isDown
         };
-        // TODO: change it
+        // TODO: change ts-ignore
         // @ts-ignore
         if(typeof recording === 'undefined'){
             // open only 'once'
@@ -84,7 +83,6 @@ export default class Game extends Phaser.Scene{
             });
         }
         if (update) {
-            // TODO: fix stacking up array
             window.recording = {
                 time: window.time,
                 keys: keys,

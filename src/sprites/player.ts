@@ -70,7 +70,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
             window.lastDir = "d"
         } else 
         {
-            //idle
+            // idle
             switch(window.lastDir){
                 case "l":
                     this.setFrame(10)
