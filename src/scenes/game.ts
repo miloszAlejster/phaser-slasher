@@ -1,26 +1,17 @@
 import Phaser from "phaser";
 import Player from "../sprites/player"
-import Slash from "../sprites/slash"
+import * as Types from "../types/index"
 
 export default class Game extends Phaser.Scene{
     player: Phaser.GameObjects.Sprite
-    slash: Phaser.GameObjects.Sprite
     dummy: Phaser.GameObjects.Rectangle
     dummy2: Phaser.GameObjects.Rectangle
-    damage: number = 10
-    damageText: Phaser.GameObjects.Text
-    keys: keysTypes
-    recordedKeys: keyBool
+    keys: Types.keysTypes
+    recordedKeys: Types.keyBool
     constructor(){
         super('game')
     }
     create(){
-        this.slash = new Slash(
-            this, 
-            this.game.scale.width/2, 
-            this.game.scale.height/2, 
-            'slash'
-        ).setVisible(false).setScale(0.2).setDepth(1)
         this.player = new Player({
             scene: this,
             x: this.game.scale.width/2, 
@@ -41,7 +32,6 @@ export default class Game extends Phaser.Scene{
             30, 30, 
             0xfff000, 1
         )
-        this.damageText = this.add.text(0, 0, ' ', {fontSize: '10px'}).setVisible(false)
         this.physics.add.existing(this.player)
         this.physics.add.existing(this.dummy)
         this.physics.add.existing(this.dummy2)
@@ -62,24 +52,19 @@ export default class Game extends Phaser.Scene{
         this.record(delta)
         // player loop
         this.player.update(time, delta)
-        // slash loop
-        this.slash.update(time, delta)
     }
     // record input
     record(delta: number){
         let update: boolean = false
-        let keys: keyBool = {
+        let keys: Types.keyBool = {
             slash: this.keys.slash.isDown,
             left: this.keys.left.isDown,
             right: this.keys.right.isDown,
             up: this.keys.up.isDown,
             down: this.keys.down.isDown
         };
-        // TODO: change it
-        // @ts-ignore
-        if(typeof recording === 'undefined'){
-            // open only 'once'
-            window.recording;
+        if(typeof window.recording === 'undefined'){
+            // init
             window.time = 0
             update = true
         } else {
@@ -88,15 +73,14 @@ export default class Game extends Phaser.Scene{
         }
         window.time += delta
         if(!update){
-            // update if keys changed
             ['slash', 'left', 'right', 'up', 'down'].forEach(dir => {
                 if (keys[dir] !== this.recordedKeys[dir]) {
                     update = true;
+                    return
                 }
             });
         }
         if (update) {
-            // TODO: fix stacking up array
             window.recording = {
                 time: window.time,
                 keys: keys,
