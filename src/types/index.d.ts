@@ -1,25 +1,22 @@
-export {};
-
+export interface keysTypes{
+  slash: Phaser.Input.Keyboard.Key
+  left: Phaser.Input.Keyboard.Key
+  right:Phaser.Input.Keyboard.Key
+  up: Phaser.Input.Keyboard.Key
+  down: Phaser.Input.Keyboard.Key
+}
+export interface updateSlash {
+  lastTimeSlash: number
+  isDoneSlash: boolean | undefined
+}
+export interface keyBool{
+  slash: boolean
+  left: boolean
+  right: boolean
+  up: boolean
+  down: boolean
+}
 declare global {
-  interface keysTypes{
-    slash: Phaser.Input.Keyboard.Key
-    left: Phaser.Input.Keyboard.Key
-    right:Phaser.Input.Keyboard.Key
-    up: Phaser.Input.Keyboard.Key
-    down: Phaser.Input.Keyboard.Key
-  }
-
-  interface updateSlash {
-    lastTimeSlash: number
-    isDoneSlash: boolean | undefined
-  }
-  interface keyBool{
-    slash: boolean
-    left: boolean
-    right: boolean
-    up: boolean
-    down: boolean
-  }
   interface Window {
     recording: {
         time: number

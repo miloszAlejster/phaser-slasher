@@ -5,8 +5,6 @@ export default class Slash extends Phaser.GameObjects.Sprite{
     isDoneSlash: boolean | boolean = false
     damage: number
     isHit: boolean = false
-    // const
-    slashCooldown: number
     constructor(config){
         super(config.scene, config.x, config.y, config.key)
         this.scene.physics.world.enable(this)
@@ -27,26 +25,22 @@ export default class Slash extends Phaser.GameObjects.Sprite{
             .on('animationcomplete', () => {
                 this.isDoneSlash = true
             })
-        let x
-        let y
+        let x: number, y: number;
         //@ts-ignore
         if(this.checkOverlap(this, this.scene.dummy)){
             x = Phaser.Math.Between(this.x - this.width/10 + 6, this.x + this.width/10 - 6)
             y = Phaser.Math.Between(this.y - this.width/10 + 6, this.y + this.height/10 - 6)
-            //@ts-ignore
             this.showDamage(x, y, this.damage)
         }
         //@ts-ignore
         if(this.checkOverlap(this, this.scene.dummy2)){
             x = Phaser.Math.Between(this.x - this.width/10 + 6, this.x + this.width/10 - 6)
             y = Phaser.Math.Between(this.y - this.width/10 + 6, this.y + this.height/10 - 6)
-            //@ts-ignore
             this.showDamage(x, y, this.damage)
         }
     }
     setXY(pos: number){
-        let x: number = 0
-        let y: number = 0
+        let x: number = 0, y: number = 0
         switch(window.lastDir){
             case "l":
                 x = window.recording.x - pos
@@ -72,8 +66,7 @@ export default class Slash extends Phaser.GameObjects.Sprite{
         spriteA: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle, 
         spriteB: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle
     ): boolean {
-	    const boundsA = spriteA.getBounds();
-	    const boundsB = spriteB.getBounds();
+	    const boundsA = spriteA.getBounds(), boundsB = spriteB.getBounds();
         const isColliding = Phaser.Geom.Intersects.RectangleToRectangle(boundsA, boundsB);
 	    return isColliding
 	}

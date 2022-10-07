@@ -1,12 +1,13 @@
 import Phaser from "phaser";
 import Player from "../sprites/player"
+import * as Types from "../types/index"
 
 export default class Game extends Phaser.Scene{
     player: Phaser.GameObjects.Sprite
     dummy: Phaser.GameObjects.Rectangle
     dummy2: Phaser.GameObjects.Rectangle
-    keys: keysTypes
-    recordedKeys: keyBool
+    keys: Types.keysTypes
+    recordedKeys: Types.keyBool
     constructor(){
         super('game')
     }
@@ -55,18 +56,15 @@ export default class Game extends Phaser.Scene{
     // record input
     record(delta: number){
         let update: boolean = false
-        let keys: keyBool = {
+        let keys: Types.keyBool = {
             slash: this.keys.slash.isDown,
             left: this.keys.left.isDown,
             right: this.keys.right.isDown,
             up: this.keys.up.isDown,
             down: this.keys.down.isDown
         };
-        // TODO: change ts-ignore
-        // @ts-ignore
-        if(typeof recording === 'undefined'){
-            // open only 'once'
-            window.recording;
+        if(typeof window.recording === 'undefined'){
+            // init
             window.time = 0
             update = true
         } else {
@@ -75,10 +73,10 @@ export default class Game extends Phaser.Scene{
         }
         window.time += delta
         if(!update){
-            // update if keys changed
             ['slash', 'left', 'right', 'up', 'down'].forEach(dir => {
                 if (keys[dir] !== this.recordedKeys[dir]) {
                     update = true;
+                    return
                 }
             });
         }

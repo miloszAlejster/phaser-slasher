@@ -14,13 +14,16 @@ export default class Player extends Phaser.GameObjects.Sprite{
     slashCooldown: number = 500// ms
     isDoneSlash: boolean | undefined = undefined
     update(time: number, delta: number): void {
+        // player movement
         this.handlePlayerMovement()
+        // slash
         this.handleSlashAttack(time, delta)
     }
+    // create and perform slash animation
     handleSlashAttack(time: number, delta: number){
         const damage = this.damage
         const cooldown = time - this.lastTimeSlash < this.slashCooldown
-        //init slash attack
+        // init slash attack
         if((!this.slash || !this.slash.scene) && window.recording.keys.slash && !cooldown){
             this.createSlash()
             this.isDoneSlash = false
@@ -38,7 +41,6 @@ export default class Player extends Phaser.GameObjects.Sprite{
     }
     // create slash attack
     createSlash(){
-        // TODO: change x and y bug
         this.slash = new Slash({
             scene: this.scene, 
             x: -1000,
