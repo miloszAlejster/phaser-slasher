@@ -26,17 +26,18 @@ export default class Slash extends Phaser.GameObjects.Sprite{
                 this.isDoneSlash = true
             })
         let x: number, y: number;
+        // TODO: change dummy to group of object that are hittable
+        // TOFO: figure out type problem
         //@ts-ignore
-        if(this.checkOverlap(this, this.scene.dummy)){
+        if(this.checkOverlap(this, this.scene.dummy) && this.scene.dummy.hp > 0){
             x = Phaser.Math.Between(this.x - this.width/10 + 6, this.x + this.width/10 - 6)
             y = Phaser.Math.Between(this.y - this.width/10 + 6, this.y + this.height/10 - 6)
             this.showDamage(x, y, this.damage)
-        }
-        //@ts-ignore
-        if(this.checkOverlap(this, this.scene.dummy2)){
-            x = Phaser.Math.Between(this.x - this.width/10 + 6, this.x + this.width/10 - 6)
-            y = Phaser.Math.Between(this.y - this.width/10 + 6, this.y + this.height/10 - 6)
-            this.showDamage(x, y, this.damage)
+            // deal damage
+            //@ts-ignore
+            this.scene.dummy.isHit = true
+            //@ts-ignore
+            this.scene.dummy.damageTaken = this.damage
         }
     }
     setXY(pos: number){

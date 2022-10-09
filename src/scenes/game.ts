@@ -1,11 +1,11 @@
 import Phaser from "phaser";
 import Player from "../sprites/player"
+import Dummy from "../sprites/dummy"
 import * as Types from "../types/index"
 
 export default class Game extends Phaser.Scene{
     player: Phaser.GameObjects.Sprite
     dummy: Phaser.GameObjects.Rectangle
-    dummy2: Phaser.GameObjects.Rectangle
     keys: Types.keysTypes
     recordedKeys: Types.keyBool
     constructor(){
@@ -18,25 +18,16 @@ export default class Game extends Phaser.Scene{
             y: this.game.scale.height/2,
             key: 'player'
         })
-        this.dummy = this.add.rectangle
-        (
-            this.game.scale.width/2 + 60, 
-            this.game.scale.height/2 + 20, 
-            30, 30, 
-            0xff0000, 1
-        )
-        this.dummy2 = this.add.rectangle
-        (
-            this.game.scale.width/2 - 60, 
-            this.game.scale.height/2 - 20, 
-            30, 30, 
-            0xfff000, 1
-        )
+        this.dummy = new Dummy({
+            scene: this,
+            x: this.game.scale.width/2 + 60, 
+            y: this.game.scale.height/2 + 20, 
+            width: 30, 
+            height: 30 
+        })
         this.physics.add.existing(this.player)
         this.physics.add.existing(this.dummy)
-        this.physics.add.existing(this.dummy2)
         this.physics.add.collider(this.player, this.dummy)
-        this.physics.add.collider(this.player, this.dummy2)
 
         this.keys = {
             slash: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
@@ -52,6 +43,8 @@ export default class Game extends Phaser.Scene{
         this.record(delta)
         // player loop
         this.player.update(time, delta)
+        // dummy loop
+        this.dummy.update(time, delta)
     }
     // record input
     record(delta: number){
