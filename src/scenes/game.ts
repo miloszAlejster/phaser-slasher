@@ -8,6 +8,8 @@ export default class Game extends Phaser.Scene{
     dummy: Phaser.GameObjects.Rectangle
     keys: Types.keysTypes
     recordedKeys: Types.keyBool
+    isDummy: boolean = false
+    dummySpawnCooldown: number = 0
     constructor(){
         super('game')
     }
@@ -18,23 +20,15 @@ export default class Game extends Phaser.Scene{
             y: this.game.scale.height/2,
             key: 'player'
         })
-        this.dummy = new Dummy({
-            scene: this,
-            x: this.game.scale.width/2 + 60, 
-            y: this.game.scale.height/2 + 20, 
-            width: 30, 
-            height: 30 
-        })
         this.physics.add.existing(this.player)
-        this.physics.add.existing(this.dummy)
-        this.physics.add.collider(this.player, this.dummy)
 
         this.keys = {
             slash: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
             left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
             right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT),
             up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
-            down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
+            down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
+            spawnD: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         };
         window.lastDir = 'd'
     }
@@ -44,7 +38,37 @@ export default class Game extends Phaser.Scene{
         // player loop
         this.player.update(time, delta)
         // dummy loop
-        this.dummy.update(time, delta)
+        this.testSpawnDummy(time, delta)
+    }
+    // function for testing - spawning dummies
+    testSpawnDummy(time: number, delta: number){
+        // update
+        if(this.isDummy){
+            this.dummy.update(time, delta)
+        }
+        // create
+        if(!this.isDummy && window.recording.keys.spawnD === true){
+            this.isDummy = true
+            this.testAddDummyRandom(time)
+        }
+        // destroy old, create new
+        if(this.isDummy && window.recording.keys.spawnD === true
+            && time - this.dummySpawnCooldown > 1000){
+            this.dummy.destroy()
+            this.testAddDummyRandom(time)
+        }
+    }
+    testAddDummyRandom(time : number){
+        this.dummy = new Dummy({
+            scene: this,
+            x: Phaser.Math.Between(this.player.width, this.scale.width - this.player.width), 
+            y: Phaser.Math.Between(this.player.height, this.scale.height - this.player.height), 
+            width: 30, 
+            height: 30,
+            fillColor: 0xfff000
+        })
+        this.physics.add.existing(this.dummy)
+        this.dummySpawnCooldown = time
     }
     // record input
     record(delta: number){
@@ -54,7 +78,8 @@ export default class Game extends Phaser.Scene{
             left: this.keys.left.isDown,
             right: this.keys.right.isDown,
             up: this.keys.up.isDown,
-            down: this.keys.down.isDown
+            down: this.keys.down.isDown,
+            spawnD: this.keys.spawnD.isDown
         };
         if(typeof window.recording === 'undefined'){
             // init
@@ -66,7 +91,7 @@ export default class Game extends Phaser.Scene{
         }
         window.time += delta
         if(!update){
-            ['slash', 'left', 'right', 'up', 'down'].forEach(dir => {
+            ['slash', 'left', 'right', 'up', 'down', 'spawnD'].forEach(dir => {
                 if (keys[dir] !== this.recordedKeys[dir]) {
                     update = true;
                     return
