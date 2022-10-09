@@ -8,7 +8,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
         this.scene.add.existing(this)
     }
     // var-attacks
-    damage: number = 10
+    damage: number = 100
     slash: Slash
     lastTimeSlash: number = 0
     slashCooldown: number = 500// ms

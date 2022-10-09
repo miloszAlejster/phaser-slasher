@@ -4,6 +4,7 @@ export interface keysTypes{
   right:Phaser.Input.Keyboard.Key
   up: Phaser.Input.Keyboard.Key
   down: Phaser.Input.Keyboard.Key
+  spawnD: Phaser.Input.Keyboard.Key
 }
 export interface updateSlash {
   lastTimeSlash: number
@@ -15,6 +16,7 @@ export interface keyBool{
   right: boolean
   up: boolean
   down: boolean
+  spawnD: boolean
 }
 declare global {
   interface Window {
