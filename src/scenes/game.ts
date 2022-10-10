@@ -19,7 +19,8 @@ export default class Game extends Phaser.Scene{
             x: this.game.scale.width/2, 
             y: this.game.scale.height/2,
             key: 'player'
-        })
+        }).setDepth(1)
+        this.cameras.main.startFollow(this.player)
         this.physics.add.existing(this.player)
 
         this.keys = {
@@ -31,6 +32,14 @@ export default class Game extends Phaser.Scene{
             spawnD: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         };
         window.lastDir = 'd'
+        // tileset
+        const map = this.make.tilemap({ key: 'town'})
+        const tileset = map.addTilesetImage('town', 'town')
+        map.createLayer('Ground', tileset)
+        map.setCollisionByProperty({ collides: true })
+        // TODO: change it
+        //@ts-ignore
+        this.physics.add.collider(this.player, map)
     }
     update(time: number, delta: number): void {
         // record input

@@ -46,7 +46,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
             x: -1000,
             y: -1000, 
             key: 'slash'
-        }).setScale(0.16).setDepth(1)
+        }).setScale(0.16).setDepth(2)
     }
     // player movement
     handlePlayerMovement(){
