@@ -20,8 +20,6 @@ export default class Game extends Phaser.Scene{
             y: this.game.scale.height/2,
             key: 'player'
         }).setDepth(1)
-        this.cameras.main.startFollow(this.player)
-        this.physics.add.existing(this.player)
 
         this.keys = {
             slash: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
@@ -34,12 +32,23 @@ export default class Game extends Phaser.Scene{
         window.lastDir = 'd'
         // tileset
         const map = this.make.tilemap({ key: 'town'})
-        const tileset = map.addTilesetImage('town', 'town')
-        map.createLayer('Ground', tileset)
-        map.setCollisionByProperty({ collides: true })
-        // TODO: change it
-        //@ts-ignore
-        this.physics.add.collider(this.player, map)
+        const tileset = map.addTilesetImage('town', 'tiles')
+        const layer = map.createLayer('Ground', tileset)
+        layer.setCollisionByProperty({ collides: true })
+        // collisions
+        this.physics.add.collider(this.player, layer,)
+        // camera
+        const camera = this.cameras.main;
+        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        camera.startFollow(this.player)
+
+        // debug collision on layer
+        // const debugGraphics = this.add.graphics().setAlpha(0.75);
+        // layer.renderDebug(debugGraphics, {
+        //     tileColor: null, // Color of non-colliding tiles
+        //     collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
+        //     faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
+        // });
     }
     update(time: number, delta: number): void {
         // record input

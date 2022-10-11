@@ -8,7 +8,7 @@ export default class PreloaderScene extends Phaser.Scene{
     preload(){
         this.load.spritesheet('player', './sprites/Pepper.png', { frameWidth: 24, frameHeight: 32});
         this.load.spritesheet('slash', './sprites/slash.png', { frameWidth: 125, frameHeight: 150});
-        this.load.image('town', 'tiles/town.png')
+        this.load.image('tiles', 'tiles/town.png')
         this.load.tilemapTiledJSON('town', 'tiles/town.json')
     }
     create(){
