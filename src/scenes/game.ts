@@ -5,11 +5,13 @@ import * as Types from "../types/index"
 
 export default class Game extends Phaser.Scene{
     player: Phaser.GameObjects.Sprite
+    // TODO: move dummy logic to dummy class
     dummy: Phaser.GameObjects.Rectangle
     keys: Types.keysTypes
     recordedKeys: Types.keyBool
     isDummy: boolean = false
     dummySpawnCooldown: number = 0
+    enemies: Phaser.Physics.Arcade.Group
     constructor(){
         super('game')
     }
@@ -35,20 +37,23 @@ export default class Game extends Phaser.Scene{
         const tileset = map.addTilesetImage('town', 'tiles', 32, 32, 1, 2)
         const layer = map.createLayer('Ground', tileset)
         layer.setCollisionByProperty({ collides: true })
-        // collisions
-        this.physics.add.collider(this.player, layer,)
+        // collision
+        this.enemies = this.physics.add.group()
+        this.physics.add.collider(this.player, this.enemies)
+        this.physics.add.collider(this.player, layer)
         // camera
         const camera = this.cameras.main;
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         camera.startFollow(this.player)
-
         // debug collision on layer
-        // const debugGraphics = this.add.graphics().setAlpha(0.75);
-        // layer.renderDebug(debugGraphics, {
-        //     tileColor: null, // Color of non-colliding tiles
-        //     collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
-        //     faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
-        // });
+        /*
+        const debugGraphics = this.add.graphics().setAlpha(0.75);
+        layer.renderDebug(debugGraphics, {
+            tileColor: null, // Color of non-colliding tiles
+            collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
+            faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
+        });
+        */
     }
     update(time: number, delta: number): void {
         // record input
@@ -85,7 +90,7 @@ export default class Game extends Phaser.Scene{
             height: 30,
             fillColor: 0xfff000
         })
-        this.physics.add.existing(this.dummy)
+        this.enemies.add(this.dummy)
         this.dummySpawnCooldown = time
     }
     // record input
