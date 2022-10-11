@@ -32,7 +32,7 @@ export default class Game extends Phaser.Scene{
         window.lastDir = 'd'
         // tileset
         const map = this.make.tilemap({ key: 'town'})
-        const tileset = map.addTilesetImage('town', 'tiles')
+        const tileset = map.addTilesetImage('town', 'tiles', 32, 32, 1, 2)
         const layer = map.createLayer('Ground', tileset)
         layer.setCollisionByProperty({ collides: true })
         // collisions
