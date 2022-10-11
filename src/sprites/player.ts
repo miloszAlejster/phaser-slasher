@@ -4,15 +4,18 @@ import Slash from "./slash";
 export default class Player extends Phaser.GameObjects.Sprite{
     constructor(config){
         super(config.scene, config.x, config.y, config.key)
+        // nwm jak to dział dokładnie
+        // TODO: fix it I guess?
         this.scene.physics.world.enable(this)
         this.scene.add.existing(this)
+        this.scene.physics.add.existing(this)
     }
-    // var-attacks
     damage: number = 100
     slash: Slash
     lastTimeSlash: number = 0
     slashCooldown: number = 500// ms
     isDoneSlash: boolean | undefined = undefined
+    MovementSpeed: number = 80
     update(time: number, delta: number): void {
         // player movement
         this.handlePlayerMovement()
@@ -46,28 +49,36 @@ export default class Player extends Phaser.GameObjects.Sprite{
             x: -1000,
             y: -1000, 
             key: 'slash'
-        }).setScale(0.16).setDepth(1)
+        }).setScale(0.16).setDepth(2)
     }
     // player movement
     handlePlayerMovement(){
+        // reset
+        this.body.velocity.x = 0;
+        this.body.velocity.y = 0;
+        // handle movement
         if (window.recording.keys.left === true)
         {
-            this.x -= 1.5;
+            // this.x -= 1.5;
+            this.body.velocity.x = -this.MovementSpeed
             this.play('walk-left', true)
             window.lastDir = "l"
         } else if (window.recording.keys.right === true)
         {
-            this.x += 1.5;
+            //this.x += 1.5;
+            this.body.velocity.x = this.MovementSpeed
             this.play('walk-right', true)
             window.lastDir = "r"
         } else  if (window.recording.keys.up === true)
         {
-            this.y -= 1.5;
+            // this.y -= 1.5;
+            this.body.velocity.y = -this.MovementSpeed
             this.play('walk-up', true)
             window.lastDir = "u"
         } else if (window.recording.keys.down === true)
         {
-            this.y += 1.5;
+            // this.y += 1.5;
+            this.body.velocity.y = this.MovementSpeed
             this.play('walk-down', true)
             window.lastDir = "d"
         } else 
