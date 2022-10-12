@@ -20,7 +20,7 @@ export default class Dummy extends Phaser.GameObjects.Rectangle{
     }
     controlTakenDamage(){        
         if(this.isHit){
-            if(this.hp > 0) this.hp -= this.damageTaken
+           if(this.hp > 0) this.hp -= this.damageTaken
             // reset
             this.isHit = false
             this.damageTaken = 0

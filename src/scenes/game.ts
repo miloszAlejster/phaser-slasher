@@ -5,13 +5,13 @@ import * as Types from "../types/index"
 
 export default class Game extends Phaser.Scene{
     player: Phaser.GameObjects.Sprite
-    // TODO: move dummy logic to dummy class
-    dummy: Phaser.GameObjects.Rectangle
     keys: Types.keysTypes
     recordedKeys: Types.keyBool
+    enemies: Phaser.Physics.Arcade.Group
+    // TODO: move dummy logic to dummy class
+    dummy: Phaser.GameObjects.Rectangle
     isDummy: boolean = false
     dummySpawnCooldown: number = 0
-    enemies: Phaser.Physics.Arcade.Group
     constructor(){
         super('game')
     }
@@ -40,6 +40,7 @@ export default class Game extends Phaser.Scene{
         // collision
         this.enemies = this.physics.add.group()
         this.physics.add.collider(this.player, this.enemies)
+        this.physics.add.collider(layer, this.enemies)
         this.physics.add.collider(this.player, layer)
         // camera
         const camera = this.cameras.main;
