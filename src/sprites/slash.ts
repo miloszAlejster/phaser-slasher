@@ -4,6 +4,7 @@ export default class Slash extends Phaser.GameObjects.Sprite{
     damageText: Phaser.GameObjects.Text
     isDoneSlash: boolean | boolean = false
     damage: number
+    isFirst: boolean = false
     isHit: boolean = false
     constructor(config){
         super(config.scene, config.x, config.y, config.key)
@@ -11,34 +12,36 @@ export default class Slash extends Phaser.GameObjects.Sprite{
         this.scene.add.existing(this)
     }
     // update 'slash' and return time of last 'slash'
-    update(time: number, delta: number, damage: number): boolean{
+    update(time: number, delta: number, damage: number, enemy): boolean{
         this.damage = damage
         this.handleSlashAnimation()
+        this.handleDamage(enemy)
         return this.isDoneSlash
+    }
+    handleDamage(enemy){
+        if(this.isHit) return
+        if(enemy && enemy.hp > 0){
+            let x: number, y: number;
+            x = Phaser.Math.Between(this.x - this.width/10 + 6, this.x + this.width/10 - 6)
+            y = Phaser.Math.Between(this.y - this.width/10 + 6, this.y + this.height/10 - 6)
+            this.showDamage(x, y, this.damage)
+            // deal damage
+            enemy.isHit = true
+            enemy.damageTaken = this.damage
+            // reset
+            this.isHit = true
+        }
     }
     // slash animation
     handleSlashAnimation(){
-        if(this.isHit) return
-        this.isHit = true
+        if(this.isFirst) return
         this.setXY(20)
         this.play("slash-hit", true)
             .on('animationcomplete', () => {
                 this.isDoneSlash = true
             })
-        let x: number, y: number;
-        // TODO: change dummy to group of object that are hittable
-        // TOFO: figure out type problem
-        //@ts-ignore
-        if(this.scene.isDummy && this.checkOverlap(this, this.scene.dummy) && this.scene.dummy.hp > 0){
-            x = Phaser.Math.Between(this.x - this.width/10 + 6, this.x + this.width/10 - 6)
-            y = Phaser.Math.Between(this.y - this.width/10 + 6, this.y + this.height/10 - 6)
-            this.showDamage(x, y, this.damage)
-            // deal damage
-            //@ts-ignore
-            this.scene.dummy.isHit = true
-            //@ts-ignore
-            this.scene.dummy.damageTaken = this.damage
-        }
+        // reset
+        this.isFirst = true
     }
     setXY(pos: number){
         let x: number = 0, y: number = 0
@@ -63,14 +66,6 @@ export default class Slash extends Phaser.GameObjects.Sprite{
         this.x = x
         this.y = y  
     }
-    checkOverlap(
-        spriteA: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle, 
-        spriteB: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle
-    ): boolean {
-	    const boundsA = spriteA.getBounds(), boundsB = spriteB.getBounds();
-        const isColliding = Phaser.Geom.Intersects.RectangleToRectangle(boundsA, boundsB);
-	    return isColliding
-	}
     showDamage(x: number, y: number, damage: number){
         this.damageText = this.scene.add.text(x, y, damage.toString(), {fontSize: '10px'})
         this.scene.time.addEvent({delay:700, callback: this.handleTextDissapear, callbackScope: this} )

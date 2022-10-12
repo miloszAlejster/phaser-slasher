@@ -14,7 +14,8 @@ const config: Phaser.Types.Core.GameConfig = {
 		arcade: {
 			debug: true
 		}
-	}
+	},
+	zoom: 1.9
 }
 const game = new Phaser.Game(config);
 
